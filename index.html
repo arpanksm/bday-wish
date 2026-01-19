@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Sazzy!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
@@ -10,7 +10,7 @@
         body {
             font-family: 'Nunito', sans-serif;
             overflow: hidden;
-            touch-action: none;
+            touch-action: none; /* Critical for mobile games */
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -41,12 +41,12 @@
             100% { transform: translateX(100vw); }
         }
 
-        /* 3D Balloon Styles */
+        /* 3D Balloon Styles - Responsive Sizes */
         .balloon {
             position: absolute;
             bottom: -150px;
-            width: 100px; 
-            height: 120px;
+            width: 85px;  /* Mobile friendly size */
+            height: 105px;
             border-radius: 50%;
             cursor: pointer;
             user-select: none;
@@ -60,6 +60,14 @@
                         inset -10px -10px 20px rgba(0,0,0,0.1),
                         5px 10px 15px rgba(0,0,0,0.1);
             transition: transform 0.1s, filter 0.2s;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        @media (min-width: 768px) {
+            .balloon {
+                width: 110px;
+                height: 130px;
+            }
         }
 
         /* Pop Animation Class */
@@ -80,7 +88,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 2px;
-            height: 100px;
+            height: 100%; /* Relative to parent */
             background: rgba(255,255,255,0.6);
             z-index: -1;
         }
@@ -114,7 +122,7 @@
         /* Instagram Style Frame */
         .insta-frame {
             background: white;
-            padding: 16px 16px 24px 16px;
+            padding: 12px 12px 20px 12px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             transform: rotate(-2deg);
             transition: transform 0.3s ease;
@@ -128,6 +136,7 @@
         .gift-container {
             cursor: pointer;
             animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-tap-highlight-color: transparent;
         }
         
         .gift-container:hover .gift-body {
@@ -187,7 +196,7 @@
         }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col items-center justify-center text-gray-800 overflow-hidden">
+<body class="h-screen w-screen flex flex-col items-center justify-center text-gray-800 overflow-hidden select-none">
 
     <!-- Ambient Background Clouds -->
     <div id="clouds-container"></div>
@@ -196,40 +205,40 @@
     <canvas id="confetti-canvas"></canvas>
 
     <!-- UI Container -->
-    <div class="relative z-20 w-full max-w-md p-6 text-center">
+    <div class="relative z-20 w-full max-w-md p-4 md:p-6 text-center">
         
         <!-- Screen 1: Intro -->
-        <div id="intro-screen" class="glass-card p-10 rounded-3xl transform transition-all hover:scale-105 duration-300 relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div id="intro-screen" class="glass-card p-8 md:p-10 rounded-3xl transform transition-all hover:scale-105 duration-300 relative overflow-hidden mx-auto max-w-[95%]">
+            <div class="absolute -top-10 -right-10 w-24 h-24 md:w-32 md:h-32 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div class="absolute -bottom-10 -left-10 w-24 h-24 md:w-32 md:h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
             
-            <h1 class="text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-6 drop-shadow-sm animate-pulse relative z-10">
-                Sazzy Bacchuu!
+            <h1 class="text-4xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-4 md:mb-6 drop-shadow-sm animate-pulse relative z-10 leading-tight">
+                Sazzyyy Bacchuuu
             </h1>
-            <p class="text-xl text-gray-700 mb-8 font-semibold relative z-10">
-                Chalo kuch kheleee... <br>
+            <p class="text-lg md:text-xl text-gray-700 mb-6 md:mb-8 font-semibold relative z-10">
+                Chalo kuch khele... <br>
                 Pop <span class="text-pink-600 text-3xl font-extrabold mx-1">10</span> balloons to find it! 🎈
             </p>
-            <button onclick="startGame()" class="relative z-10 w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-lg hover:shadow-pink-300/50 transform hover:-translate-y-1 transition-all border-b-4 border-purple-800 active:border-b-0 active:translate-y-1">
+            <button onclick="startGame()" class="relative z-10 w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-2xl text-lg md:text-xl shadow-lg hover:shadow-pink-300/50 transform hover:-translate-y-1 transition-all border-b-4 border-purple-800 active:border-b-0 active:translate-y-1 active:scale-95 touch-manipulation">
                 Let's Party! 🎉
             </button>
         </div>
 
         <!-- Screen 2: Game UI (Hidden initially) -->
         <div id="game-ui" class="hidden absolute top-0 left-0 w-full h-full pointer-events-none">
-            <div class="fixed top-6 right-6 glass-card px-6 py-3 rounded-full border border-white/50 shadow-xl transition-transform duration-100" id="score-card">
-                <span class="text-gray-600 font-bold uppercase text-xs tracking-wider">Balloons</span>
-                <div class="text-4xl fun-font text-purple-600 leading-none mt-1">
-                    <span id="score">0</span><span class="text-gray-400 text-2xl">/10</span>
+            <div class="fixed top-4 right-4 md:top-6 md:right-6 glass-card px-4 py-2 md:px-6 md:py-3 rounded-full border border-white/50 shadow-xl transition-transform duration-100" id="score-card">
+                <span class="text-gray-600 font-bold uppercase text-[10px] md:text-xs tracking-wider">Balloons</span>
+                <div class="text-3xl md:text-4xl fun-font text-purple-600 leading-none mt-1">
+                    <span id="score">0</span><span class="text-gray-400 text-xl md:text-2xl">/10</span>
                 </div>
             </div>
         </div>
 
         <!-- Screen 3: The Gift Box (Hidden initially) -->
-        <div id="gift-screen" class="hidden flex flex-col items-center justify-center">
-            <h2 class="text-4xl text-white font-bold mb-8 drop-shadow-md fun-font animate-bounce">A Gift for Sazzy!</h2>
+        <div id="gift-screen" class="hidden flex flex-col items-center justify-center w-full">
+            <h2 class="text-3xl md:text-4xl text-white font-bold mb-8 drop-shadow-md fun-font animate-bounce px-4">A Gift for Sazzy!</h2>
             
-            <div class="gift-container relative w-48 h-48" onclick="openGift()">
+            <div class="gift-container relative w-40 h-40 md:w-48 md:h-48" onclick="openGift()">
                 <!-- Lid -->
                 <div id="gift-lid" class="absolute -top-8 -left-2 w-[110%] h-12 bg-pink-600 rounded-lg z-20 shadow-lg flex items-center justify-center border-b-4 border-pink-800">
                     <div class="w-full h-8 bg-pink-500/20 absolute top-0"></div>
@@ -246,17 +255,17 @@
                 </div>
                 <!-- Text Container with fixed height to prevent jumping -->
                 <div class="absolute -bottom-24 w-80 left-1/2 transform -translate-x-1/2">
-                    <p id="gift-text" class="text-white font-bold text-xl drop-shadow-md transition-all duration-200 animate-pulse">Tap to Open!</p>
+                    <p id="gift-text" class="text-white font-bold text-lg md:text-xl drop-shadow-md transition-all duration-200 animate-pulse">Tap to Open!</p>
                 </div>
             </div>
         </div>
 
         <!-- Screen 4: Finale (Hidden initially) -->
-        <div id="finale-screen" class="hidden flex flex-col items-center justify-center pt-10">
+        <div id="finale-screen" class="hidden flex flex-col items-center justify-center pt-4 md:pt-10 w-full">
             <!-- Instagram Style Photo Container -->
-            <div class="insta-frame floating rounded-lg mb-8 bg-white relative z-10">
+            <div class="insta-frame floating rounded-lg mb-6 md:mb-8 bg-white relative z-10 max-w-[85%]">
                 <!-- Aspect Ratio 4:5 (Standard Instagram Portrait) -->
-                <div class="relative overflow-hidden w-[280px] h-[350px] sm:w-[320px] sm:h-[400px] bg-gray-100 mb-4 rounded-sm border border-gray-100">
+                <div class="relative overflow-hidden w-[240px] h-[300px] sm:w-[320px] sm:h-[400px] bg-gray-100 mb-4 rounded-sm border border-gray-100 mx-auto">
                     <!-- The requested image with fallback -->
                     <img src="sazzy.png" 
                          onerror="this.src='https://placehold.co/600x750/ffb7b2/ffffff?text=Happy+Bday+Sazzy!'"
@@ -267,17 +276,17 @@
                 <!-- Caption Area -->
                 <div class="text-left px-2">
                     <p class="font-bold text-gray-800 text-sm flex items-center gap-1">
-                        <span class="text-pink-500">❤️</span> sazzy_bday <img src="https://img.icons8.com/color/48/000000/verified-badge.png" class="w-4 h-4" alt="verified">
+                        <span class="text-pink-500">❤️</span> sazzy_cutie <img src="https://img.icons8.com/color/48/000000/verified-badge.png" class="w-4 h-4" alt="verified">
                     </p>
                     <p class="text-xs text-gray-500 mt-1">Wishing you the most magical day ever! ✨ #HappyBirthday</p>
                 </div>
             </div>
             
-            <h1 class="text-5xl md:text-7xl text-white font-black drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] mb-4 fun-font tracking-wide">
-                Happy Birthday Meri Cutieee!
+            <h1 class="text-4xl md:text-7xl text-white font-black drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] mb-4 fun-font tracking-wide px-2">
+                Happy Birthday babyyyyy!
             </h1>
             
-            <button onclick="location.reload()" class="relative z-10 mt-4 bg-white text-purple-600 font-bold py-3 px-10 rounded-full shadow-lg hover:bg-purple-50 transition-colors uppercase tracking-widest text-sm border-2 border-purple-200">
+            <button onclick="location.reload()" class="relative z-10 mt-2 bg-white text-purple-600 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-purple-50 transition-colors uppercase tracking-widest text-sm border-2 border-purple-200 active:scale-95">
                 Play Again ↺
             </button>
         </div>
@@ -295,6 +304,9 @@
         let balloonInterval;
         // Vibrant Palette
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F1C', '#9D4EDD', '#FF006E', '#8338EC'];
+        
+        // Audio Context (Global for mobile reuse)
+        let audioCtx;
 
         // DOM Elements
         const introScreen = document.getElementById('intro-screen');
@@ -334,12 +346,15 @@
         }
         createClouds();
 
-        // Cursor Trail
-        window.addEventListener('pointermove', (e) => {
-            if(Math.random() > 0.5) { // Throttling
+        // Cursor Trail (Optimized for Touch)
+        const moveHandler = (e) => {
+            const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+            
+            if(Math.random() > 0.6) { // Throttling
                 cursorParticles.push({
-                    x: e.clientX,
-                    y: e.clientY,
+                    x: x,
+                    y: y,
                     size: Math.random() * 4 + 2,
                     speedX: Math.random() * 2 - 1,
                     speedY: Math.random() * 2 - 1,
@@ -347,7 +362,9 @@
                     life: 1
                 });
             }
-        });
+        };
+        window.addEventListener('pointermove', moveHandler);
+        window.addEventListener('touchmove', moveHandler, {passive: true});
 
         class Particle {
             constructor(x, y, type = 'confetti') {
@@ -448,8 +465,31 @@
             }, 50);
         }
 
+        // Initialize Audio Context (Mobile Best Practice: Init on User Interaction)
+        function initAudio() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext && !audioCtx) {
+                audioCtx = new AudioContext();
+                
+                // Create a silent buffer to "unlock" the audio context on mobile
+                const buffer = audioCtx.createBuffer(1, 1, 22050);
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioCtx.destination);
+                if (source.start) {
+                    source.start(0);
+                } else if (source.noteOn) {
+                    source.noteOn(0);
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
         // Game Logic
         function startGame() {
+            initAudio(); // Trigger audio unlock
             introScreen.classList.add('hidden');
             gameUI.classList.remove('hidden');
             gameActive = true;
@@ -464,11 +504,18 @@
             
             const color = colors[Math.floor(Math.random() * colors.length)];
             balloon.style.backgroundColor = color;
-            balloon.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            
+            // Mobile Responsive Spawning
+            // Ensure balloon doesn't spawn off-screen. Balloon width is approx 85px-110px.
+            const bWidth = window.innerWidth < 768 ? 85 : 110;
+            const maxLeft = window.innerWidth - bWidth - 10;
+            const randomLeft = Math.random() * maxLeft;
+            
+            balloon.style.left = (randomLeft > 0 ? randomLeft : 0) + 'px';
             
             if (Math.random() > 0.5) {
                 balloon.innerText = ['🎂', '🎁', '✨', '💖', '🎈', '👑'][Math.floor(Math.random() * 6)];
-                balloon.style.fontSize = '32px';
+                balloon.style.fontSize = window.innerWidth < 768 ? '24px' : '32px';
                 balloon.style.color = "rgba(255,255,255,0.8)";
             }
 
@@ -478,7 +525,10 @@
             balloon.style.transform = `translateY(0)`;
 
             // Event Listeners
-            balloon.addEventListener('pointerdown', (e) => popBalloon(e, balloon));
+            balloon.addEventListener('pointerdown', (e) => {
+                e.preventDefault(); // Prevent default touch actions like scroll
+                popBalloon(e, balloon);
+            });
             balloon.addEventListener('click', (e) => {
                  if(document.body.contains(balloon)) popBalloon(e, balloon);
             });
@@ -508,7 +558,11 @@
             balloon.dataset.popped = "true";
 
             playPopSound();
-            spawnConfetti(e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2), e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2), 30);
+            
+            // Handle coordinates for both touch and mouse
+            const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+            const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
+            spawnConfetti(x, y, 30);
             
             // Apply Pop Animation class
             balloon.classList.add('popping');
@@ -531,24 +585,27 @@
         }
 
         function playPopSound(pitch = 400) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (AudioContext) {
-                const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(pitch + Math.random() * 100, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                
-                gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-                
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                
-                osc.start();
-                osc.stop(ctx.currentTime + 0.1);
+            // Use global audioCtx
+            if (audioCtx) {
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(pitch + Math.random() * 100, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } catch(e) {
+                    console.log("Audio play error", e);
+                }
             }
         }
 
@@ -584,6 +641,7 @@
         ];
 
         function openGift() {
+            initAudio(); // Ensure audio is ready if context was suspended
             const giftText = document.getElementById('gift-text');
             const giftContainer = document.querySelector('.gift-container');
 
