@@ -134,6 +134,17 @@
             animation: giftShake 0.5s ease-in-out infinite;
         }
 
+        /* New Shake Animation for Teasing */
+        .shake-active {
+            animation: shakeHard 0.4s ease-in-out !important;
+        }
+
+        @keyframes shakeHard {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            25% { transform: translateX(-15px) rotate(-10deg); }
+            75% { transform: translateX(15px) rotate(10deg); }
+        }
+
         @keyframes giftShake {
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(-3deg); }
@@ -193,10 +204,10 @@
             <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
             
             <h1 class="text-6xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-6 drop-shadow-sm animate-pulse relative z-10">
-                Hiiee Bacchu!
+                Sazzy Bacchuu!
             </h1>
             <p class="text-xl text-gray-700 mb-8 font-semibold relative z-10">
-                Chalo kuch khele... <br>
+                Chalo kuch kheleee... <br>
                 Pop <span class="text-pink-600 text-3xl font-extrabold mx-1">10</span> balloons to find it! 🎈
             </p>
             <button onclick="startGame()" class="relative z-10 w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-4 px-8 rounded-2xl text-xl shadow-lg hover:shadow-pink-300/50 transform hover:-translate-y-1 transition-all border-b-4 border-purple-800 active:border-b-0 active:translate-y-1">
@@ -233,7 +244,10 @@
                     <div class="absolute left-1/2 transform -translate-x-1/2 w-10 h-full bg-yellow-400/90 shadow-sm"></div>
                     <div class="absolute top-1/2 transform -translate-y-1/2 w-full h-10 bg-yellow-400/90 shadow-sm"></div>
                 </div>
-                <p class="mt-8 text-white font-bold text-lg animate-pulse">Tap to Open!</p>
+                <!-- Text Container with fixed height to prevent jumping -->
+                <div class="absolute -bottom-24 w-80 left-1/2 transform -translate-x-1/2">
+                    <p id="gift-text" class="text-white font-bold text-xl drop-shadow-md transition-all duration-200 animate-pulse">Tap to Open!</p>
+                </div>
             </div>
         </div>
 
@@ -253,14 +267,14 @@
                 <!-- Caption Area -->
                 <div class="text-left px-2">
                     <p class="font-bold text-gray-800 text-sm flex items-center gap-1">
-                        <span class="text-pink-500">❤️</span> sazzy_the_cutie <img src="https://img.icons8.com/color/48/000000/verified-badge.png" class="w-4 h-4" alt="verified">
+                        <span class="text-pink-500">❤️</span> sazzy_bday <img src="https://img.icons8.com/color/48/000000/verified-badge.png" class="w-4 h-4" alt="verified">
                     </p>
                     <p class="text-xs text-gray-500 mt-1">Wishing you the most magical day ever! ✨ #HappyBirthday</p>
                 </div>
             </div>
             
             <h1 class="text-5xl md:text-7xl text-white font-black drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] mb-4 fun-font tracking-wide">
-                Happy Birthday meri cutiee!!
+                Happy Birthday Meri Cutieee!
             </h1>
             
             <button onclick="location.reload()" class="relative z-10 mt-4 bg-white text-purple-600 font-bold py-3 px-10 rounded-full shadow-lg hover:bg-purple-50 transition-colors uppercase tracking-widest text-sm border-2 border-purple-200">
@@ -516,7 +530,7 @@
             }
         }
 
-        function playPopSound() {
+        function playPopSound(pitch = 400) {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (AudioContext) {
                 const ctx = new AudioContext();
@@ -524,7 +538,7 @@
                 const gain = ctx.createGain();
                 
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(400 + Math.random() * 200, ctx.currentTime);
+                osc.frequency.setValueAtTime(pitch + Math.random() * 100, ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
                 
                 gain.gain.setValueAtTime(0.1, ctx.currentTime);
@@ -559,26 +573,59 @@
             }, 500);
         }
 
-        function openGift() {
-            // Play magical sound (simulated)
-            playPopSound();
-            playPopSound();
-            
-            const lid = document.getElementById('gift-lid');
-            lid.classList.add('lid-fly');
-            
-            spawnConfetti(window.innerWidth/2, window.innerHeight/2, 100);
-            startContinuousConfetti();
+        // Teasing Logic Variables
+        let teaseStep = 0;
+        const teaseMessages = [
+            "Hey! Not so fast! 😜",
+            "Eh? It's locked! Try again! 🔒",
+            "Nope, still stuck. Say please? 🤭",
+            "Wait... did you bring cake? 🍰",
+            "Okay okay, opening now... 3, 2, 1! 🚀"
+        ];
 
-            setTimeout(() => {
-                giftScreen.classList.add('hidden');
-                finaleScreen.classList.remove('hidden');
-                // Simple entrance animation
-                finaleScreen.animate([
-                    { opacity: 0, transform: 'scale(0.8)' },
-                    { opacity: 1, transform: 'scale(1)' }
-                ], { duration: 800, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' });
-            }, 600);
+        function openGift() {
+            const giftText = document.getElementById('gift-text');
+            const giftContainer = document.querySelector('.gift-container');
+
+            if (teaseStep < teaseMessages.length) {
+                // Play a lower pitched 'thud' sound for the tease
+                playPopSound(200); 
+
+                // Shake animation trigger
+                giftContainer.classList.remove('shake-active');
+                void giftContainer.offsetWidth; // Force reflow
+                giftContainer.classList.add('shake-active');
+
+                // Update text with tease
+                giftText.innerText = teaseMessages[teaseStep];
+                giftText.classList.remove('animate-pulse');
+                void giftText.offsetWidth;
+                giftText.classList.add('animate-pulse');
+
+                teaseStep++;
+            } else {
+                // FINAL OPEN
+                playPopSound(600); // High pitch magical sound
+                playPopSound(500);
+                
+                const lid = document.getElementById('gift-lid');
+                lid.classList.add('lid-fly');
+                
+                giftText.innerText = "TADAAA! 🎉";
+                
+                spawnConfetti(window.innerWidth/2, window.innerHeight/2, 100);
+                startContinuousConfetti();
+
+                setTimeout(() => {
+                    giftScreen.classList.add('hidden');
+                    finaleScreen.classList.remove('hidden');
+                    // Simple entrance animation
+                    finaleScreen.animate([
+                        { opacity: 0, transform: 'scale(0.8)' },
+                        { opacity: 1, transform: 'scale(1)' }
+                    ], { duration: 800, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' });
+                }, 800);
+            }
         }
 
     </script>
